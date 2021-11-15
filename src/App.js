@@ -1,3 +1,4 @@
+import React from 'react';
 import './App.css';
 
 
@@ -35,14 +36,16 @@ const App = () => {
 }
 
 const Search = () => {
+  const [searchTerm, setSearchTerm] = React.useState('');
   const handleChange = (event) => {
-    console.log(event.target.value);
+    setSearchTerm(event.target.value);
   };
 
   return (
     <div>
       <label htmlFor="search">Search: </label>
       <input id="search" type="text" onChange={handleChange}></input>
+      <p>Searching for <strong>{searchTerm}</strong></p>
     </div>
   )
 }
