@@ -34,12 +34,28 @@ const App = () => {
     },
   ];
 
+  const getAsyncStories = () => 
+    // Promise.resolve({data: {stories: initialStories} });
+    new Promise((resolve) => 
+    setTimeout(
+      () => resolve({ data: {stories: initialStories } }),
+      2000
+    )
+  );
+
+
   const [searchTerm, setSearchTerm] = useSemiPersistentState(
     'search',
     'React'
   );
 
-  const [stories, setStories] = React.useState(initialStories);
+  const [stories, setStories] = React.useState([]);
+
+  React.useEffect(() => {
+    getAsyncStories().then(result => {
+      setStories(result.data.stories);
+    });
+  }, []);
 
   const handleSearch = (event) => {
     console.log(event.target.value)
