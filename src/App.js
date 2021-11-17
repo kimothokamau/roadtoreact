@@ -55,26 +55,26 @@ const App = () => {
       <h1>My Hacker Stories</h1>
       <InputWithLabel
         id="search"
-        label="Search"
         value={searchTerm}
         onInputChange={handleSearch}
-      />
-      <hr />
+        >
+          <strong>Search:</strong>    
+        </InputWithLabel>
+      <hr/>
       <List list={searchedStories} />
     </div>
   )
 }
 
-const InputWithLabel = ({ id, label, value, onInputChange, type}) => (
+const InputWithLabel = ({ id, label, value, onInputChange, type="text", children,}) => (
   <React.Fragment>
-    <label htmlFor={id}>{label}</label>
+    <label htmlFor={id}>{children}</label>
     &nbsp;
     <input
       id={id}
-      type="text"
+      type={type}
       value={value}
       onChange={onInputChange}
-      type="text"
     />
   </React.Fragment>
 );
