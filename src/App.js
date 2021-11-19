@@ -13,6 +13,36 @@ const useSemiPersistentState = (key, initialState) => {
   return [value, setValue];
 }
 
+// Reducer function (state and action as arguments)
+// const storiesReducer = (state, action) => {
+//   if (action.type === 'SET_STORIES') {
+//     return action.payload;
+//   } 
+//   else if (action.type === 'REMOVE_STORY') {
+//     return state.filter(
+//       (story) => action.payload.objectID !== story.objectID
+//     );
+//   }
+//   else {
+//     throw new Error();
+//   }
+// }
+// Migrate to a switch , case instead of if else
+
+const storiesReducer = (state, action) => {
+  switch (action.type) {
+    case 'SET_STORIES':
+      return action.payload;
+    case 'REMOVE_STORY':
+      return state.filter(
+        (story) => action.payload.objectID !== story.objectID
+      );
+    default:
+      throw new Error();
+  }
+
+}
+
 
 const App = () => {
   const initialStories = [
@@ -49,15 +79,24 @@ const App = () => {
     'React'
   );
 
-  const [stories, setStories] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [isError, setIsError] = React.useState(false);
+  // const [stories, setStories] = React.useState([]);
+    // Replace useState with useReducer for managing the stories 
+    const [stories, dispatchStories] = React.useReducer(storiesReducer,[]
+    );
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [isError, setIsError] = React.useState(false);
+
+
 
   React.useEffect(() => {
     setIsLoading(true);
 
     getAsyncStories().then((result) => {
-      setStories(result.data.stories);
+      // setStories(result.data.stories);
+      dispatchStories({
+        type: 'SET_STORIES',
+        payload: result.data.stories,
+      });
       setIsLoading(false);
     });
     // .catch(() => setIsError(true));
@@ -72,7 +111,11 @@ const App = () => {
     const newStories = stories.filter(
       (story) => item.objectID !== story.objectID
     );
-    setStories(newStories);
+    // setStories(newStories);
+    dispatchStories({
+      type: 'REMOVE_STORIES',
+      payload: item,
+    });
   };
 
   const searchedStories = stories.filter((story) =>
